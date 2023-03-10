@@ -1,4 +1,5 @@
 import postImage from '../assets/images/postImage.jpg'
+
 export const POSTS = [
   {
     id: 1,
