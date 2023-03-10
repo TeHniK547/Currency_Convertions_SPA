@@ -1,0 +1,18 @@
+.sidebarBottom {
+    display: flex;
+    justify-content: center;
+}
+
+.sidebarBottom button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 20px;
+    padding-bottom: 10px;
+}
+
+.sidebarBottom svg {
+    margin-right: 10px;
+    fill: white;
+}

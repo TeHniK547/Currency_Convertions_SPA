@@ -1,0 +1,33 @@
+.sidebar .user {
+    height: 160px;
+    overflow: hidden;
+    width: 100%;
+    padding: 10px 0;
+    color: white;
+
+    background-image: url('../../../../assets/images/avatar-bg.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.sidebar .avatar {
+    height: 100px;
+    overflow: hidden;
+    border-radius: 60%;
+    width: 100px;
+    margin: 0 auto;
+    position: relative;
+}
+
+.sidebar h3 {
+    margin: 0;
+    margin-top: 16px;
+}
+
+.sidebar .user img {
+    width: 100%;
+    position: absolute;
+    z-index: 100;
+    left: 0;
+    top: 0px;
+}

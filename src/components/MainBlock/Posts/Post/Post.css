@@ -1,0 +1,30 @@
+.post {
+    width: 33%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 15px;
+}
+
+.post h2{
+    margin-bottom: 0;
+}
+
+.post img{
+    width: 200px;
+    border-radius: 5px;
+}
+
+.post p {
+    text-align: left;
+}
+
+.post a {
+    text-decoration: underline;
+    color: rgb(132, 0, 255);
+    font-weight: 700;
+}
+
+.post svg {
+    width: 20px;
+}
