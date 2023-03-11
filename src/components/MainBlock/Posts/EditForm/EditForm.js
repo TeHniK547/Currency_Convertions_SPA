@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import './EditForm.css';
 import { ReactComponent as CloseIcon } from '../../../../assets/images/close.svg';
 import { setPostsToLocalStorage } from '../../../../utils/helpers';
+import { POSTS_URL } from '../../../../utils/constants';
 
 export const EditForm = ({ setShowEditForm, selectedPost, setSpaPosts, spaPosts }) => {
 
@@ -23,19 +24,27 @@ export const EditForm = ({ setShowEditForm, selectedPost, setSpaPosts, spaPosts 
             ...selectedPost,
             title: postTitle,
             description: postDesc,
-        }
+        };
 
-        console.log(updatedPost);
-
-        const updatedPosts = spaPosts.map((post) => {
-            if (post.id === updatedPost.id) return updatedPost
-            else return post
+        fetch(POSTS_URL + selectedPost.id, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(updatedPost),
         })
+            .then(res => res.json())
+            .then(updatedPostFromServer => {
 
-        setSpaPosts(updatedPosts);
-        setPostsToLocalStorage(updatedPosts);
-        setShowEditForm(false);
-    }
+                const updatedPosts = spaPosts.map((post) => {
+                    if (post.id === updatedPostFromServer.id) return updatedPostFromServer
+                    else return post
+                })
+                setSpaPosts(updatedPosts)
+                setShowEditForm(false);
+            })
+            .catch((error) => console.log(error))
+    };
 
     return (
         <>
