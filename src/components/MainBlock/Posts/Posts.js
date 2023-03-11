@@ -1,56 +1,57 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { PostsHeader } from './PostsHeader/PostsHeader';
 import './Posts.css'
 import { Post } from './Post/Post';
-import { POSTS, POSTS_URL } from '../../../utils/constants'
-import { setPostsToLocalStorage } from '../../../utils/helpers'
+import { POSTS_URL } from '../../../utils/constants'
 import { EditForm } from './EditForm/EditForm';
+import { useFetchPosts } from '../../../utils/hooks';
 
 export const Posts = () => {
 
-  const [spaPosts, setSpaPosts] = useState(
-    JSON.parse(localStorage.getItem('spaPosts')) || POSTS
-  );
+  const { spaPosts, setSpaPosts, isLoading, error } = useFetchPosts(POSTS_URL);
 
-  
-  useEffect(() => {
-    fetch(POSTS_URL)
-    .then((response) => {
-      console.log(response)
-    })
-    .catch((error) => {
-      console.log(error)
-    })
-  }, [])
-  
   const likePost = (pos) => {
-    const updatePosts = [...spaPosts];
-    
-    updatePosts[pos].liked = !updatePosts[pos].liked;
+    const updatedPosts = [...spaPosts];
 
-    setPostsToLocalStorage(updatePosts)
-    setSpaPosts(updatePosts)
-  }
+    updatedPosts[pos].liked = !updatedPosts[pos].liked;
+
+    fetch(POSTS_URL + updatedPosts[pos].id, { 
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(updatedPosts[pos])
+     })
+      .then((res) => res.json())
+      .then((updatedPostsFromServer) => {
+        updatedPosts[pos] = updatedPostsFromServer;
+        setSpaPosts(updatedPosts);
+      })
+      .catch((error) => console.log(error))
+  };
 
   const deletePost = (postId) => {
     const isDelete = window.confirm('Удалить пост?');
+    
     if (isDelete) {
-      const updatePosts = spaPosts.filter((post) => {
-        return post.id !== postId
-      });
-
-      setPostsToLocalStorage(updatePosts)
-      setSpaPosts(updatePosts);
-    }
+      fetch(POSTS_URL + postId, { method: 'DELETE' })
+        .then(() => setSpaPosts(spaPosts.filter(post => post.id !== postId)))
+        .catch((error) => console.log(error))
+    };
   };
 
   const [selectedPost, setSelectedPost] = useState({});
   const [showEditForm, setShowEditForm] = useState(false);
 
-  const selectPost = (pos) => {
-    setSelectedPost(spaPosts[pos]);
+  /// редактирование поста
+  const selectPost = (post) => {
+    setSelectedPost(post);
     setShowEditForm(true);
   };
+
+  if (isLoading) return <h1>Получаем данные...</h1>
+
+  if (error) return <h1>{error.message}</h1>;
 
   return (
     <div className='postsWrapper'>
@@ -63,10 +64,10 @@ export const Posts = () => {
               title={post.title}
               description={post.description}
               liked={post.liked}/* флаг на пост лайкнут или нет*/
-              image={post.image}
+              thumbrnail={post.thumbrnail}
               likePost={() => likePost(pos)}
               deletePost={() => deletePost(post.id)}
-              selectPost={() => selectPost(pos)}
+              selectPost={() => selectPost(post)}
               key={post.id}
             />
           )
