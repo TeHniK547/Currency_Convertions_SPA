@@ -1,12 +1,17 @@
-import { useRef } from 'react'
+import { useRef } from 'react';
+import { useHistory } from 'react-router-dom';
 import './LoginPage.css'
 
 export const LoginPage = ({ setIsLoggedIn }) => {
-
+    
     const loginRef = useRef();
     const passwordRef = useRef();
 
-    const hendleSubmit = () => {
+    const history = useHistory();
+
+    const hendleSubmit = (e) => {
+
+        e.preventDefault();
 
         const userData = {
             login: loginRef.current.value,
@@ -18,6 +23,7 @@ export const LoginPage = ({ setIsLoggedIn }) => {
         localStorage.setItem('isLoggedIn', true)
 
         setIsLoggedIn(true);
+        history.push('/');
     }
     return(
         <form onSubmit={hendleSubmit} className="LoginForm">

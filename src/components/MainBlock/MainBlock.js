@@ -1,14 +1,26 @@
 import { Posts } from "./Posts/Posts"
 import { SideBar } from "./SideBar/SideBar"
-import './MainBlock.css'
 
-export const MainBlock = ({setIsLoggedIn}) => {
+import './MainBlock.css'
+import { Route } from "react-router-dom"
+import { Favourite } from "../../pages/LoginPage/Favoutite/Favorite"
+import { useFetchPosts } from "../../utils/hooks"
+import { POSTS_URL } from "../../utils/constants";
+
+export const MainBlock = ({setIsLoggedIn, isLoggedIn}) => {
+    const postsData = useFetchPosts(POSTS_URL);
+
     return(
         <>
             <SideBar setIsLoggedIn={setIsLoggedIn} />
             <main className="mainBlock">
-                <Posts />
+                <Route exact path='/news'>
+                    <Posts title="Posts" {...postsData} />
+                </Route>
+                <Route exact path="/favourite" component={Favourite}>
+                    <Posts title="Favourite posts" {...postsData} isLikedPosts />
+                </Route> 
             </main>
         </>
-    )
-}
+    );
+};
