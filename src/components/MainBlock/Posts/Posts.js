@@ -1,15 +1,21 @@
-import React, { useState } from 'react';
-import { PostsHeader } from './PostsHeader/PostsHeader';
 import './Posts.css'
 import { Post } from './Post/Post';
 import { POSTS_URL } from '../../../utils/constants'
+import { PostsHeader } from './PostsHeader/PostsHeader';
 import { EditForm } from './EditForm/EditForm';
-import { useFetchPosts } from '../../../utils/hooks';
+import { useState } from 'react';
 
-export const Posts = () => {
+export const Posts = ({ 
+  title,
+  spaPosts,
+  setSpaPosts,
+  isLoading,
+  error,
+  isLikedPosts = false
+ }) => {
 
-  const { spaPosts, setSpaPosts, isLoading, error } = useFetchPosts(POSTS_URL);
-
+  const likedPosts = spaPosts.filter((post) => post.liked);
+  
   const likePost = (pos) => {
     const updatedPosts = [...spaPosts];
 
@@ -55,10 +61,15 @@ export const Posts = () => {
 
   return (
     <div className='postsWrapper'>
-      <PostsHeader setSpaPosts={ setSpaPosts } spaPosts={spaPosts} />
+      <PostsHeader 
+        title={title}
+        isLikedPosts={isLikedPosts} 
+        setSpaPosts={ setSpaPosts } 
+        spaPosts={spaPosts} 
+      />
       
       <section className='posts'>
-        {spaPosts.map((post, pos) => {
+        {(isLikedPosts ? likedPosts : spaPosts).map((post, pos) => {
           return (
             <Post
               title={post.title}
