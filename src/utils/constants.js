@@ -25,3 +25,9 @@ export const POSTS = [
 ];
 
 export const POSTS_URL = 'https://640af21e65d3a01f980b87b8.mockapi.io/posts/';
+
+export const APP_ROUTES = [
+  '/news',
+  '/favourite',
+  '/login'
+]

@@ -2,10 +2,11 @@ import { Posts } from "./Posts/Posts"
 import { SideBar } from "./SideBar/SideBar"
 
 import './MainBlock.css'
-import { Route } from "react-router-dom"
+import { Redirect, Route, Switch } from "react-router-dom"
 import { Favourite } from "../../pages/LoginPage/Favoutite/Favorite"
 import { useFetchPosts } from "../../utils/hooks"
 import { POSTS_URL } from "../../utils/constants";
+import { NoMatch } from "../../pages/NoMatch/NoMatch"
 
 export const MainBlock = ({setIsLoggedIn, isLoggedIn}) => {
     const postsData = useFetchPosts(POSTS_URL);
@@ -14,12 +15,20 @@ export const MainBlock = ({setIsLoggedIn, isLoggedIn}) => {
         <>
             <SideBar setIsLoggedIn={setIsLoggedIn} />
             <main className="mainBlock">
-                <Route exact path='/news'>
-                    <Posts title="Posts" {...postsData} />
-                </Route>
-                <Route exact path="/favourite" component={Favourite}>
-                    <Posts title="Favourite posts" {...postsData} isLikedPosts />
-                </Route> 
+                <Switch>
+                    <Route path='/news'>
+                        <Posts title="Posts" {...postsData} />
+                    </Route>
+                    <Route path="/favourite" component={Favourite}>
+                        <Posts title="Favourite posts" {...postsData} isLikedPosts />
+                    </Route> 
+                    <Route exact path='/'>
+                        <Redirect to='/news' />
+                    </Route>
+                    <Route path="*">
+                        <NoMatch />
+                    </Route>
+                </Switch>
             </main>
         </>
     );
