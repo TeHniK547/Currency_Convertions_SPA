@@ -1,17 +1,17 @@
 import React, { useState } from 'react'; 
 import './EditForm.css';
-import { ReactComponent as CloseIcon } from '../../../../assets/images/close.svg';
-import { POSTS_URL } from '../../../../utils/constants';
+import { ReactComponent as CloseIcon } from '../../../assets/images/close.svg';
+import { POSTS_URL } from '../../../utils/constants';
 
 export const EditForm = ({ 
     setShowEditForm, 
-    selectedPost, 
-    setSpaPosts, 
-    spaPosts 
+    setSpaPost, 
+    spaPost,
+    setSpaPosts,
 }) => {
 
-    const [postTitle, setPostTitle] = useState(selectedPost?.title);
-    const [postDesc, setPostDesc] = useState(selectedPost?.description); 
+    const [postTitle, setPostTitle] = useState(spaPost?.title);
+    const [postDesc, setPostDesc] = useState(spaPost?.description); 
 
     const handlerPostTitleChange = (e) => {
         setPostTitle(e.target.value)
@@ -25,12 +25,12 @@ export const EditForm = ({
         e.preventDefault();
 
         const updatedPost = {
-            ...selectedPost,
+            ...spaPost,
             title: postTitle,
             description: postDesc,
         };
 
-        fetch(POSTS_URL + selectedPost.id, {
+        fetch(POSTS_URL + spaPost.id, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
@@ -39,12 +39,16 @@ export const EditForm = ({
         })
             .then(res => res.json())
             .then(updatedPostFromServer => {
-
-                const updatedPosts = spaPosts.map((post) => {
-                    if (post.id === updatedPostFromServer.id) return updatedPostFromServer
-                    else return post
+                setSpaPost(updatedPostFromServer)
+                setSpaPosts((spaPosts) => {
+                    return spaPosts.map(post => {
+                        if (post.id === updatedPostFromServer.id) {
+                            return updatedPostFromServer
+                        }
+        
+                        return post
+                    })
                 });
-                setSpaPosts(updatedPosts)
                 setShowEditForm(false);
             })
             .catch((error) => console.log(error))

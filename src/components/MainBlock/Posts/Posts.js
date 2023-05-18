@@ -72,10 +72,11 @@ export const Posts = ({
         {(isLikedPosts ? likedPosts : spaPosts).map((post, pos) => {
           return (
             <Post
-              title={post.title}
-              description={post.description}
-              liked={post.liked}/* флаг на пост лайкнут или нет*/
-              thumbrnail={post.thumbrnail}
+              {...post}
+              // title={post.title}
+              // description={post.description}
+              // liked={post.liked}/* флаг на пост лайкнут или нет*/
+              // thumbrnail={post.thumbrnail}
               likePost={() => likePost(pos)}
               deletePost={() => deletePost(post.id)}
               selectPost={() => selectPost(post)}

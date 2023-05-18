@@ -9,14 +9,17 @@ export const PrivateRoute = ({
     path, 
     exact = false, 
     children: Component,
+    spaPostRoutes,
 }) => {
   return (
     <Route 
       path={path}
       exact={exact}
       render={({ location }) => {
-        const isPathExists = APP_ROUTES.some(route => route === location.pathname);
-        if (!isPathExists) return <NoMatch />
+        const allRoutes = [...APP_ROUTES, ...spaPostRoutes];
+        const isPathExists = allRoutes.some((route) => route === location.pathname);
+
+        if (!isPathExists) return <NoMatch />;
 
         if (isLoggedIn) return Component;
         return <Redirect to='/login' />;
