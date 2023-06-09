@@ -1,33 +1,22 @@
 import { useRef } from 'react';
+import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
+import { logIn } from '../../store/slices/auth';
 import './LoginPage.css'
 
-export const LoginPage = ({ 
-    setIsLoggedIn,
-    setUserName 
-}) => {
+export const LoginPage = ({setUserName}) => {
     
     const loginRef = useRef();
     const passwordRef = useRef();
 
     const history = useHistory();
 
-   
+    const dispatch = useDispatch();
 
     const hendleSubmit = (e) => {
-
         e.preventDefault();
 
-        const userData = {
-            login: loginRef.current.value,
-            password: passwordRef.current.value
-        }
-
-        console.log(userData);
-
-        localStorage.setItem('isLoggedIn', true)
-
-        setIsLoggedIn(true);        
+        dispatch(logIn());       
         history.push('/');
     }
     return(

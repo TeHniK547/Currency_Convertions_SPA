@@ -16,8 +16,8 @@ export const Post = ({
   thumbrnail = imagePlaceholder,
   likePost,
   deletePost,
-  selectPost,
-}  ) => {
+  selectPost
+}) => {
 
   const customFilling = liked ? 'crimson' : 'black';
 
@@ -25,14 +25,15 @@ export const Post = ({
     <p>
       {description.length > 100 ? (
         <>
-          {description.slice(0, 101)}...
-          <Link to={`/news/${id}`}>Подробнее</Link>
+          {description.slice(0, 101)}...          
         </>
       ) : (
         description
       )}
+      &nbsp;
+      <Link to={`/news/${id}`}>Подробнее</Link>
     </p>
-  )
+  );
 
   return (
     <div className='post'>

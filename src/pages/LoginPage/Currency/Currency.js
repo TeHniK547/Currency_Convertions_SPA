@@ -30,10 +30,11 @@ export const Currency = () => {
 //
   const calculateFromFirst = () => {
     setFirstCount(firstCountInput);//кол-во валюты которые ввели с клаввы записывается в переменную firstCount
+    console.log(firstCur);
     if (firstCur === secondCur)
       return setSecondCount(firstCountInput);//приравнивает кол-во валюты, если они совпадают и выходит из функции
     if (firstCur === 'BYN') {
-      axios.get('https://www.nbrb.by/api/exrates/rates/' + secondCur.toString() + '?parammode=2')
+      axios.get('https://api.nbrb.by/exrates/rates/' + secondCur.toString() + '?parammode=2')
         .then(response => {
           if (response.status === 200) {
             setSecondCount(firstCountInput / response.data.Cur_OfficialRate * response.data.Cur_Scale) // подсчет валюты если первая валюта BYN
@@ -42,18 +43,18 @@ export const Currency = () => {
       return;
     }
     if (secondCur === 'BYN') {
-      axios.get('https://www.nbrb.by/api/exrates/rates/' + firstCur.toString() + '?parammode=2')
+      axios.get('https://api.nbrb.by/exrates/rates' + firstCur.toString() + '?parammode=2')
         .then(response => {
           if (response.status === 200) {
-            setSecondCount(firstCountInput * response.data.Cur_OfficialRate / response.data.Cur_Scale)// подсчет валюты если ВТАРАЯ валюта BYN
+            setSecondCount(firstCountInput * response.data.Cur_OfficialRate / response.data.Cur_Scale)// подсчет валюты если ВТОРАЯ валюта BYN
           }
         })
       return;
     }
-    axios.get('https://www.nbrb.by/api/exrates/rates/' + firstCur.toString() + '?parammode=2')
+    axios.get('https://api.nbrb.by/exrates/rates/' + firstCur.toString() + '?parammode=2')
       .then((response1) => {
         if (response1.status === 200) {
-          axios.get('https://www.nbrb.by/api/exrates/rates/' + secondCur.toString() + '?parammode=2')
+          axios.get('https://api.nbrb.by/exrates/rates/' + secondCur.toString() + '?parammode=2')
             .then(response2 => {
               setSecondCount(firstCountInput * response1.data.Cur_OfficialRate / response1.data.Cur_Scale / response2.data.Cur_OfficialRate * response2.data.Cur_Scale);
             })// ПОДСЧЕТ ЕСЛИ ОБА НЕ BYN 
@@ -131,7 +132,7 @@ export const Currency = () => {
     if (firstCur === secondCur)
       return setFirstCount(secondCount);
     if (secondCur === 'BYN') {
-      axios.get('https://www.nbrb.by/api/exrates/rates/' + firstCur.toString() + '?parammode=2')
+      axios.get('https://api.nbrb.by/exrates/rates/' + firstCur.toString() + '?parammode=2')
         .then(response => {
           if (response.status === 200) {
             setFirstCount(secondCount / response.data.Cur_OfficialRate * response.data.Cur_Scale)
@@ -140,7 +141,7 @@ export const Currency = () => {
       return;
     }
     if (firstCur === 'BYN') {
-      axios.get('https://www.nbrb.by/api/exrates/rates/' + secondCur.toString() + '?parammode=2')
+      axios.get('https://api.nbrb.by/exrates/rates/' + secondCur.toString() + '?parammode=2')
         .then(response => {
           if (response.status === 200) {
             setFirstCount(secondCount * response.data.Cur_OfficialRate / response.data.Cur_Scale)
@@ -148,10 +149,10 @@ export const Currency = () => {
         })
       return;
     }
-    axios.get('https://www.nbrb.by/api/exrates/rates/' + firstCur.toString() + '?parammode=2')
+    axios.get('https://api.nbrb.by/exrates/rates/' + firstCur.toString() + '?parammode=2')
       .then((response1) => {
         if (response1.status === 200) {
-          axios.get('https://www.nbrb.by/api/exrates/rates/' + secondCur.toString() + '?parammode=2')
+          axios.get('https://api.nbrb.by/exrates/rates/' + secondCur.toString() + '?parammode=2') //https://www.nbrb.by/api/exrates/rates/
           .then(response2 => {
             setFirstCount(secondCount * response1.data.Cur_OfficialRate / response1.data.Cur_Scale / response2.data.Cur_OfficialRate * response2.data.Cur_Scale);
           })
@@ -172,7 +173,7 @@ export const Currency = () => {
 
     <div class="currencies-side">
       <h1>Конвертер валют онлайн</h1>
-      <div class="curreincies-date">Официальные курсы валют НБРБ на 13.02.2023 </div>
+      <div class="curreincies-date">Официальные курсы валют НБРБ на сегодня </div>
       <table class="table">
         <tbody id="data"></tbody>
       </table>

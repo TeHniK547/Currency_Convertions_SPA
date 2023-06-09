@@ -4,7 +4,7 @@ import { Navigation } from './Navigation/Navigation';
 import './SideBar.css'
 import { User } from './User/User';
 
-export const SideBar = ({ setIsLoggedIn }) => {
+export const SideBar = () => {
 
     return (
         <aside className="sidebar">
@@ -14,7 +14,7 @@ export const SideBar = ({ setIsLoggedIn }) => {
                 <Navigation />
             </section>
 
-            <LogOut setIsLoggedIn={setIsLoggedIn}/>
+            <LogOut />
         </aside>
     );
 } ;
