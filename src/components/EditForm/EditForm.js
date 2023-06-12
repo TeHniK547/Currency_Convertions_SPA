@@ -1,13 +1,13 @@
 import React, { useState } from 'react'; 
-import './AddForm.css';
-import { ReactComponent as CloseIcon } from '../../../../../assets/images/close.svg';
-import { createNewPost } from '../../../../../store/slices/posts';
+import './EditForm.css';
+import { ReactComponent as CloseIcon } from '../../assets/images/close.svg';
 import { useDispatch } from 'react-redux';
+import { editPost } from '../../store/slices/posts';
 
-export const AddForm = ({ setShowAddForm, spaPosts }) => {
+export const EditForm = ({ setShowEditForm, selectedPost }) => {
 
-    const [postTitle, setPostTitle] = useState('');
-    const [postDesc, setPostDesc] = useState(''); 
+    const [postTitle, setPostTitle] = useState(selectedPost?.title);
+    const [postDesc, setPostDesc] = useState(selectedPost?.description); 
 
     const handlerPostTitleChange = (e) => {
         setPostTitle(e.target.value)
@@ -15,34 +15,32 @@ export const AddForm = ({ setShowAddForm, spaPosts }) => {
 
     const handlePostDescChange = (e) => {
         setPostDesc(e.target.value)
-    }
+    };
 
     const dispatch = useDispatch();
 
-    const handleCreatePost = (e) => {
+    const handleEditPost = (e) => {
         e.preventDefault();
 
-        const newPost = {
+        const updatedPost = {
+            ...selectedPost,
             title: postTitle,
             description: postDesc,
-            liked: false,
-            thumbnail: spaPosts[0].thumbnail,
-        }        
+        };
 
-        dispatch (createNewPost(newPost))
-            .finally(() => setShowAddForm(false));
-    }
+        dispatch(editPost(updatedPost)).finally(() => setShowEditForm(false))
+    };
 
     return (
         <>
-            <form className='addPostForm' onSubmit={handleCreatePost}>
-                <button className='hideBtn' onClick={() => setShowAddForm(false)}>
+            <form className='editPostForm' onSubmit={handleEditPost}>
+                <button className='hideBtn' onClick={() => setShowEditForm(false)}>
                     <CloseIcon />
                 </button>
-                <h2>Создать пост</h2>
+                <h2>Редактирование поста</h2>
                 <div>
                     <input
-                        className='AddFormInput'
+                        className='editFormInput'
                         type='text'
                         name='postTitle'
                         placeholder='Заголовок поста'
@@ -53,7 +51,7 @@ export const AddForm = ({ setShowAddForm, spaPosts }) => {
                 </div>
                 <div>
                     <textarea
-                        className='addFormInput'
+                        className='editFormInput'
                         name='postDescription'
                         placeholder='Описание поста'
                         value={postDesc}
@@ -63,12 +61,12 @@ export const AddForm = ({ setShowAddForm, spaPosts }) => {
                     />
                 </div>
                 <div>
-                    <button className='addPostBtn' type='submit'>
-                        Добавить пост
+                    <button className='editPostBtn' type='submit'>
+                        Сохранить и закрыть
                     </button>
                 </div>
             </form>
-            <div onClick={() => setShowAddForm(false)} className="overlay"></div>
+            <div className="overlay" onClick={() => setShowEditForm(false)}></div>
         </>
     );
 };

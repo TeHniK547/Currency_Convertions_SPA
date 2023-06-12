@@ -5,6 +5,8 @@ import { MainBlock } from './components/MainBlock/MainBlock';
 import { Switch } from 'react-router-dom';
 import { PrivateRoute } from './components/PrivateRoute/PrivateRoute';
 import { PublicRoute } from './components/PublicRoute/PublicRoute';
+import { useFetchPosts } from './utils/hooks';
+import { POSTS_URL } from './utils/constants';
 
 function App() {
 
@@ -12,18 +14,31 @@ function App() {
     localStorage.getItem('isLoggedIn') === 'true'
   );
 
+  const postsData = useFetchPosts(POSTS_URL);
+
+  const spaPostRoutes = postsData?.spaPosts.map((post) => {
+    return `/news/${post.id}`;
+  });
+
   return (
     <div className="App">
       <Switch>
-        
-        <PublicRoute exact path='/login' isLoggedIn={isLoggedIn}>
+        <PublicRoute 
+          exact 
+          path='/login' 
+          isLoggedIn={isLoggedIn} 
+          spaPostRoutes={spaPostRoutes}>
           <LoginPage setIsLoggedIn={setIsLoggedIn} />
         </PublicRoute>
 
-        <PrivateRoute path='/' isLoggedIn={isLoggedIn}>
-          <MainBlock setIsLoggedIn={setIsLoggedIn} isLoggedIn={isLoggedIn}/>
+        <PrivateRoute 
+          path='/' 
+          isLoggedIn={isLoggedIn} 
+          spaPostRoutes={spaPostRoutes}
+        >
+          <MainBlock setIsLoggedIn={setIsLoggedIn} postsData={postsData}/>
         </PrivateRoute>
-        
+
       </Switch>
     </div>
   );

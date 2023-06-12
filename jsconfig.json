@@ -1,0 +1,6 @@
+{
+    "compolerOptions": {
+        "baseUrl": "src"
+    },
+    "include": ["src"]
+}

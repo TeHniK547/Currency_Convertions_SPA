@@ -2,8 +2,8 @@ import './Posts.css'
 import { Post } from './Post/Post';
 import { POSTS_URL } from '../../../utils/constants'
 import { PostsHeader } from './PostsHeader/PostsHeader';
-import { EditForm } from './EditForm/EditForm';
 import { useState } from 'react';
+import { EditForm } from '../../EditForm/EditForm';
 
 export const Posts = ({ 
   title,
@@ -72,10 +72,11 @@ export const Posts = ({
         {(isLikedPosts ? likedPosts : spaPosts).map((post, pos) => {
           return (
             <Post
-              title={post.title}
-              description={post.description}
-              liked={post.liked}/* флаг на пост лайкнут или нет*/
-              thumbrnail={post.thumbrnail}
+              {...post}
+              // title={post.title}
+              // description={post.description}
+              // liked={post.liked}/* флаг на пост лайкнут или нет*/
+              // thumbrnail={post.thumbrnail}
               likePost={() => likePost(pos)}
               deletePost={() => deletePost(post.id)}
               selectPost={() => selectPost(post)}
@@ -87,7 +88,7 @@ export const Posts = ({
       </section>
 
       {showEditForm && (
-        <EditForm 
+        <EditForm
           selectedPost={selectedPost} 
           setShowEditForm={setShowEditForm}
           setSpaPosts={setSpaPosts}

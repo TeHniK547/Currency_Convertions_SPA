@@ -2,12 +2,17 @@ import { useRef } from 'react';
 import { useHistory } from 'react-router-dom';
 import './LoginPage.css'
 
-export const LoginPage = ({ setIsLoggedIn }) => {
+export const LoginPage = ({ 
+    setIsLoggedIn,
+    setUserName 
+}) => {
     
     const loginRef = useRef();
     const passwordRef = useRef();
 
     const history = useHistory();
+
+   
 
     const hendleSubmit = (e) => {
 
@@ -22,7 +27,7 @@ export const LoginPage = ({ setIsLoggedIn }) => {
 
         localStorage.setItem('isLoggedIn', true)
 
-        setIsLoggedIn(true);
+        setIsLoggedIn(true);        
         history.push('/');
     }
     return(

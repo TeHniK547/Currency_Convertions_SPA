@@ -6,16 +6,18 @@ import { ReactComponent as TrashIcon } from '../../../../assets/images/trash.svg
 import { ReactComponent as EditIcon } from '../../../../assets/images/edit.svg';
 
 import './Post.css';
+import { Link } from 'react-router-dom';
 
-export const Post = ({ 
+export const Post = ({
+  id, 
   title, 
   description, 
   liked = false, 
   thumbrnail = imagePlaceholder,
   likePost,
   deletePost,
-  selectPost,
-}  ) => {
+  selectPost
+}) => {
 
   const customFilling = liked ? 'crimson' : 'black';
 
@@ -23,14 +25,15 @@ export const Post = ({
     <p>
       {description.length > 100 ? (
         <>
-          {description.slice(0, 101)}...
-          <a href='/'>Подробнее</a>
+          {description.slice(0, 101)}...          
         </>
       ) : (
         description
       )}
+      &nbsp;
+      <Link to={`/news/${id}`}>Подробнее</Link>
     </p>
-  )
+  );
 
   return (
     <div className='post'>

@@ -1,9 +1,10 @@
 import React, { useState } from 'react'; 
 import './EditForm.css';
-import { ReactComponent as CloseIcon } from '../../../../assets/images/close.svg';
-import { POSTS_URL } from '../../../../utils/constants';
+import { ReactComponent as CloseIcon } from '../../../assets/images/close.svg';
+import { useDispatch } from 'react-redux';
+import { editPost } from '../../../store/slices/posts';
 
-export const EditForm = ({ setShowEditForm, selectedPost, setSpaPosts, spaPosts }) => {
+export const EditForm = ({ setShowEditForm, selectedPost }) => {
 
     const [postTitle, setPostTitle] = useState(selectedPost?.title);
     const [postDesc, setPostDesc] = useState(selectedPost?.description); 
@@ -16,7 +17,9 @@ export const EditForm = ({ setShowEditForm, selectedPost, setSpaPosts, spaPosts 
         setPostDesc(e.target.value)
     };
 
-    const editPost = (e) => {
+    const dispatch = useDispatch();
+
+    const handleEditPost = (e) => {
         e.preventDefault();
 
         const updatedPost = {
@@ -25,29 +28,12 @@ export const EditForm = ({ setShowEditForm, selectedPost, setSpaPosts, spaPosts 
             description: postDesc,
         };
 
-        fetch(POSTS_URL + selectedPost.id, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(updatedPost),
-        })
-            .then(res => res.json())
-            .then(updatedPostFromServer => {
-
-                const updatedPosts = spaPosts.map((post) => {
-                    if (post.id === updatedPostFromServer.id) return updatedPostFromServer
-                    else return post
-                })
-                setSpaPosts(updatedPosts)
-                setShowEditForm(false);
-            })
-            .catch((error) => console.log(error))
+        dispatch(editPost(updatedPost)).finally(() => setShowEditForm(false))
     };
 
     return (
         <>
-            <form className='editPostForm' onSubmit={editPost}>
+            <form className='editPostForm' onSubmit={handleEditPost}>
                 <button className='hideBtn' onClick={() => setShowEditForm(false)}>
                     <CloseIcon />
                 </button>
