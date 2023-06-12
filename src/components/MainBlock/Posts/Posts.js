@@ -1,35 +1,49 @@
 import './Posts.css'
 import { Post } from './Post/Post';
+import { POSTS_URL } from '../../../utils/constants'
 import { PostsHeader } from './PostsHeader/PostsHeader';
-import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { 
-  deletePost, 
-  editPost, 
-  fetchPosts, 
-  selectPostsData } from '../../../store/slices/posts';
+import { useState } from 'react';
 import { EditForm } from '../../EditForm/EditForm';
 
-export const Posts = () => {
+export const Posts = ({ 
+  title,
+  spaPosts,
+  setSpaPosts,
+  isLoading,
+  error,
+  isLikedPosts = false
+ }) => {
 
-  // const likedPosts = spaPosts.filter((post) => post.liked);
+  const likedPosts = spaPosts.filter((post) => post.liked);
   
-  const { list: posts, isLoading, error } = useSelector(selectPostsData);
-  const dispatch = useDispatch();
+  const likePost = (pos) => {
+    const updatedPosts = [...spaPosts];
 
-  useEffect(() => {
-    dispatch(fetchPosts());
-  }, [dispatch])
+    updatedPosts[pos].liked = !updatedPosts[pos].liked;
 
-  const handleLikePost = (index) => {
-    const updatedPosts = [...posts];
-    updatedPosts[index] = {...updatedPosts[index], liked: !updatedPosts[index].liked };
-    
-    dispatch(editPost(updatedPosts[index]));
+    fetch(POSTS_URL + updatedPosts[pos].id, { 
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(updatedPosts[pos])
+     })
+      .then((res) => res.json())
+      .then((updatedPostsFromServer) => {
+        updatedPosts[pos] = updatedPostsFromServer;
+        setSpaPosts(updatedPosts);
+      })
+      .catch((error) => console.log(error))
   };
 
-  const handleDeletePost = (postId) => {
-    dispatch(deletePost(postId))
+  const deletePost = (postId) => {
+    const isDelete = window.confirm('Удалить пост?');
+    
+    if (isDelete) {
+      fetch(POSTS_URL + postId, { method: 'DELETE' })
+        .then(() => setSpaPosts(spaPosts.filter(post => post.id !== postId)))
+        .catch((error) => console.log(error))
+    };
   };
 
   const [selectedPost, setSelectedPost] = useState({});
@@ -48,22 +62,23 @@ export const Posts = () => {
   return (
     <div className='postsWrapper'>
       <PostsHeader 
-        title={'Posts'}
-        isLikedPosts={false} 
-        spaPosts={posts} 
+        title={title}
+        isLikedPosts={isLikedPosts} 
+        setSpaPosts={ setSpaPosts } 
+        spaPosts={spaPosts} 
       />
       
       <section className='posts'>
-        {posts.map((post, pos) => {
+        {(isLikedPosts ? likedPosts : spaPosts).map((post, pos) => {
           return (
             <Post
               {...post}
-              title={post.title}
-              description={post.description}
-              liked={post.liked}/* флаг на пост лайкнут или нет*/
-              thumbrnail={post.thumbrnail}
-              likePost={() => handleLikePost(pos)}
-              deletePost={() => handleDeletePost(post)}
+              // title={post.title}
+              // description={post.description}
+              // liked={post.liked}/* флаг на пост лайкнут или нет*/
+              // thumbrnail={post.thumbrnail}
+              likePost={() => likePost(pos)}
+              deletePost={() => deletePost(post.id)}
               selectPost={() => selectPost(post)}
               key={post.id}
             />
@@ -76,6 +91,8 @@ export const Posts = () => {
         <EditForm
           selectedPost={selectedPost} 
           setShowEditForm={setShowEditForm}
+          setSpaPosts={setSpaPosts}
+          spaPosts={spaPosts}
         />
       )}
     </div>
